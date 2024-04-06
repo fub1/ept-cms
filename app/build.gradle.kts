@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android.gradle.plugin)
+    implementation(libs.converter.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,6 +94,12 @@ dependencies {
     implementation(libs.converter.scalars)
     // work manager
     implementation(libs.androidx.work.runtime.ktx)
+    // Kotlin serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    // Retrofit with Kotlin serialization Converter
+
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 }
 
 kapt {

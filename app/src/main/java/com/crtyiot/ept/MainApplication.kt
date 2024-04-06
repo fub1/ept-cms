@@ -1,4 +1,4 @@
-/*
+package com.crtyiot.ept/*
  * Copyright 2020 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package com.crtyiot.ept.di
+import android.app.Application
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
 
-import com.crtyiot.ept.network.MaterialApiService
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
-
-@InstallIn(SingletonComponent::class)
-@Module
-class NetworkModule {
-
-    @Singleton
-    @Provides
-    fun materialApiService(): MaterialApiService {
-        return MaterialApiService.create()
+@HiltAndroidApp
+class MainApplication : Application(){
+    override fun onCreate() {
+        super.onCreate()
     }
+
 }
