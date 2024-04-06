@@ -73,6 +73,7 @@ fun indexScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
+                    modifier = Modifier.height(30.dp),
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary,
@@ -107,12 +108,11 @@ fun indexScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxWidth()
-                    .offset(y = 20.dp)
             ) {
 
 
                 // Header
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(20.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(text = "扫描员工", modifier = Modifier.weight(1f))
                     Text(text = "原材料号", modifier = Modifier.weight(1f))

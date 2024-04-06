@@ -69,6 +69,7 @@ fun NewTaskScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
+                    modifier = Modifier.height(30.dp),
                     navigationIcon = {
                         IconButton(onClick = { navController.navigate(Screen.IndexScreen.route) }) {
                             Icon(

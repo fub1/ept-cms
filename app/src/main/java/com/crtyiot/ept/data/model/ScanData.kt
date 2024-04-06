@@ -9,10 +9,10 @@ import java.time.LocalDateTime
 @Entity(tableName = "scanData")
 data class ScanData(
     @PrimaryKey
+    val vdaSerialCode: String,
     val taskId: String,
     val cmsMatCode: String,
     val vdaMatCode: String,
     val scanTime: String,
-    val vdaSerialCode: String,
     val isDeleted: Boolean
 )

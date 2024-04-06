@@ -33,11 +33,13 @@ fun AppNavigator() {
     NavHost(navController = navController, startDestination = Screen.IndexScreen.route) {
         composable(Screen.IndexScreen.route) { indexScreen(navController = navController) }
         composable(Screen.NewTaskScreen.route) { NewTaskScreen(navController = navController) }
-        composable(Screen.ScanScreen("taskId").withTaskId("taskId")) { backStackEntry ->
+        composable("scanScreen/{taskId}") { backStackEntry ->
             val taskId = backStackEntry.arguments?.getString("taskId")
             if (taskId != null) {
                 ScanScreen(taskId = taskId, navController = navController)
             }
         }
+
     }
 }
+
