@@ -29,6 +29,7 @@ fun ScanScreen(
     viewModel: scanViewModel = hiltViewModel()
 
 ) {
+    viewModel.setTaskId(taskId)
     val taskScaned = viewModel.scanTaskList.collectAsState(initial = emptyList())
 
     Scaffold(
@@ -47,6 +48,7 @@ fun ScanScreen(
         }
     ) {
         Text(text = "Task ID: $taskId")
+        Text(text = "Task Scaned: ${taskScaned.value.size}")
     }
 }
 

@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crtyiot.ept.data.MaterialRepository
-import com.crtyiot.ept.data.ScanDataRepository
+import com.crtyiot.ept.data.OfflineScanDataRepository
 import com.crtyiot.ept.data.TaskRepository
 import com.crtyiot.ept.data.model.Material
 import com.crtyiot.ept.data.model.ScanData

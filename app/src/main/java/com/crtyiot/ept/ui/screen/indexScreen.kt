@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -27,6 +29,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
@@ -36,14 +40,32 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.crtyiot.ept.ui.Screen
 import com.crtyiot.ept.ui.viewModel.indexViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import androidx.activity.compose.BackHandler
+import kotlin.system.exitProcess
 
+object ScanScreen {
+    const val route = "scanScreen"
+
+    fun withTaskId(taskId: String): String {
+        return "$route/$taskId"
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun indexScreen(viewModel: indexViewModel = hiltViewModel()) {
+fun indexScreen(
+    viewModel: indexViewModel = hiltViewModel(),
+    navController: NavController
+) {
+    // 主页返回退出
+    BackHandler {
+        exitProcess(0)
+    }
     val taskDH by viewModel.taskDash.collectAsState(initial = emptyList())
     var rowCounter = 0
 
@@ -63,9 +85,11 @@ fun indexScreen(viewModel: indexViewModel = hiltViewModel()) {
 
             floatingActionButton = {
                 FloatingActionButton(
-                    modifier = Modifier.offset(x = (-45).dp, y = (-10).dp),
+                    modifier = Modifier
+                        .offset(x = (-35).dp, y = (-5).dp)
+                        .width(80.dp),
                     onClick = {
-                        // Handle FAB click
+                        navController.navigate(Screen.NewTaskScreen.route)
                     }
                 ) {
                     Column (verticalArrangement = Arrangement.Bottom) {
@@ -83,6 +107,7 @@ fun indexScreen(viewModel: indexViewModel = hiltViewModel()) {
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxWidth()
+                    .offset(y = 20.dp)
             ) {
 
 
@@ -99,7 +124,10 @@ fun indexScreen(viewModel: indexViewModel = hiltViewModel()) {
                 Spacer(Modifier.height(4.dp))
 
                 // Data
-                LazyColumn {
+                LazyColumn (
+                    modifier = Modifier.fillMaxHeight(0.75f)
+
+                ) {
                     items(taskDH) { task ->
                         val backgroundColor = if (rowCounter % 2 == 0) Color.LightGray else Color.White
                         Row(modifier = Modifier
@@ -117,7 +145,7 @@ fun indexScreen(viewModel: indexViewModel = hiltViewModel()) {
                                 },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clickable { /* Handle navigation here */ },
+                                    .clickable { navController.navigate(ScanScreen.withTaskId(task.taskId)) },
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )

@@ -25,6 +25,7 @@ interface TaskDao {
         SELECT task.taskId, task.staff, task.vdaMatId, task.createTaskTime, task.targetQty, 
         (SELECT COUNT(*) FROM scanData WHERE scanData.taskId = task.taskId AND scanData.isDeleted = 0) as scannedCount
         FROM task
+        ORDER BY task.createTaskTime DESC
     """)
         fun getTasksWithScannedCount(): Flow<List<TaskWithScannedCount>>
 

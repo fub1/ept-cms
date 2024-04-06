@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 // Flow for data observation in the UI or Use_case layer
 
 // data write to DB mast use kotlin coroutines(suspend fun)
-interface TaskRespository {
+interface TaskRepository {
     fun getAll(): Flow<List<Task>>
     suspend fun insert(task: Task)
     suspend fun delete(task: Task)

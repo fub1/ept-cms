@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ScanDataRepository @Inject constructor (
+class OfflineScanDataRepository @Inject constructor (
     private val scanDataDao: ScanDataDao
 ) : ScanDataRespository {
 
@@ -24,11 +24,11 @@ class ScanDataRepository @Inject constructor (
     override suspend fun update(scanData: ScanData) = scanDataDao.update(scanData)
 
     companion object {
-        @Volatile private var instance: ScanDataRepository? = null
+        @Volatile private var instance: OfflineScanDataRepository? = null
 
         fun getInstance(scanDataDao: ScanDataDao) =
             instance ?: synchronized(this) {
-                instance ?: ScanDataRepository(scanDataDao).also { instance = it }
+                instance ?: OfflineScanDataRepository(scanDataDao).also { instance = it }
             }
     }
 }

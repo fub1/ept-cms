@@ -3,14 +3,14 @@ import com.crtyiot.ept.data.Dao.TaskDao
 import kotlinx.coroutines.flow.Flow
 import com.crtyiot.ept.data.model.Task
 import com.crtyiot.ept.data.model.TaskWithScannedCount
-import com.crtyiot.scan.data.repository.TaskRespository
+import com.crtyiot.scan.data.repository.TaskRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TaskRepository @Inject constructor (
     private val taskDao: TaskDao
-) : TaskRespository {
+) : TaskRepository {
     override fun getAll(): Flow<List<Task>> = taskDao.getAllTasks()
 
     fun taskDashboard(): Flow<List<TaskWithScannedCount>> = taskDao.getTasksWithScannedCount()
