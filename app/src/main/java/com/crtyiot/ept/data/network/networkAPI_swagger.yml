@@ -1,0 +1,40 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: 'Material API'
+paths:
+  /materials:
+    get:
+      summary: 'Get all materials'
+      responses:
+        '200':
+          description: 'A list of materials.'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/Material'
+  /materials/{id}:
+    get:
+      summary: 'Get a material by its ID'
+      parameters:
+      - name: 'id'
+        in: 'path'
+        required: true
+        type: 'integer'
+      responses:
+        '200':
+          description: 'A single material.'
+          schema:
+            $ref: '#/definitions/Material'
+definitions:
+  Material:
+    type: 'object'
+    properties:
+      vdaMatId:
+        type: 'integer'
+      vdaMatCode:
+        type: 'string'
+      cmsMatCode:
+        type: 'string'
+      pickQty:
+        type: 'integer'

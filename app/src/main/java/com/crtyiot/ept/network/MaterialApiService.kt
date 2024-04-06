@@ -15,10 +15,11 @@ private val retrofit = Retrofit.Builder()
 interface MaterialApiService {
     @GET("/materials")
     suspend fun getMaterials(): String
-}
 
-object MatApi {
-    val retrofitService : MaterialApiService by lazy {
-        retrofit.create(MaterialApiService::class.java)
+
+    companion object {
+        fun create(): MaterialApiService {
+            return retrofit.create(MaterialApiService::class.java)
+        }
     }
 }
