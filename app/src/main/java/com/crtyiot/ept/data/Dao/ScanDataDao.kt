@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.crtyiot.ept.data.model.Material
 import kotlinx.coroutines.flow.Flow
 import com.crtyiot.ept.data.model.ScanData
 
@@ -15,13 +16,13 @@ import com.crtyiot.ept.data.model.ScanData
 @Dao
 interface ScanDataDao {
 
-    @Query("SELECT * from scanData ORDER BY scanTime ASC")
+    @Query("SELECT * from scanData")
     fun getAllScanData(): Flow<List<ScanData>>
 
-    // 凭task-uuid
+    @Query("SELECT * from scanData WHERE taskId = :taskId")
+    fun getScanTask(taskId: String): Flow<List<ScanData>>
 
-    @Query("SELECT * from scanData WHERE taskId = :scanId")
-    fun getScanData(scanId: String): Flow<ScanData>
+
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.
@@ -34,3 +35,4 @@ interface ScanDataDao {
     @Delete
     suspend fun delete(scanData: ScanData)
 }
+

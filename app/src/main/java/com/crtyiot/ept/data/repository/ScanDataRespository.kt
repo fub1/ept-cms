@@ -1,4 +1,4 @@
-package com.crtyiot.scan.data.repository
+package com.crtyiot.ept.data.repository
 
 import com.crtyiot.ept.data.model.ScanData
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,10 @@ import kotlinx.coroutines.flow.Flow
 // data write to DB mast use kotlin coroutines(suspend fun)
 interface ScanDataRespository {
     fun getAll(): Flow<List<ScanData>>
+
+    fun getScanTask(taskId: String): Flow<List<ScanData>>
     suspend fun insert(scanData: ScanData)
     suspend fun delete(scanData: ScanData)
     suspend fun update(scanData: ScanData)
+
 }
