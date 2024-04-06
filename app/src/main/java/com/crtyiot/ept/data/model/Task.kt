@@ -9,10 +9,10 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "task")
 data class Task(
-    @PrimaryKey(autoGenerate = true)
-    val taskId: Int = 0,
+    @PrimaryKey
+    val taskId: String,
     val staff: String,
-    val vdaMatId: Int,
-    val createTaskTime: LocalDateTime,
+    val vdaMatId: String,
+    val createTaskTime: String,
     val isSynced: Boolean
 )

@@ -24,4 +24,7 @@ interface MaterialDao {
 
     @Delete
     suspend fun delete(material: Material)
+
+    @Query("DELETE FROM material")
+    suspend fun deleteAll()
 }

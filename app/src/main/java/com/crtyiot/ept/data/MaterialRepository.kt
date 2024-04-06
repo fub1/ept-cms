@@ -1,10 +1,14 @@
 package com.crtyiot.ept.data
 
+import android.util.Log
 import com.crtyiot.ept.data.Dao.MaterialDao
 import com.crtyiot.ept.network.MaterialApiService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import com.crtyiot.ept.data.model.Material
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
+import java.net.UnknownHostException
 import javax.inject.Singleton
 
 @Singleton
@@ -15,10 +19,33 @@ class MaterialRepository @Inject constructor(
 
     fun getAll(): Flow<List<Material>> = materialDao.getAllMaterials()
 
+
+
     suspend fun refreshMaterials() {
-        val materialsFromServer = materialApiService.getMaterials()
-        materialsFromServer.forEach { material ->
-            materialDao.insert(material)
+        try {
+            // Set a timeout for the network request
+            withTimeout(10_000L) {
+                val materialsFromServer = materialApiService.getMaterials()
+                materialDao.deleteAll()
+                materialsFromServer.forEach { material ->
+                    materialDao.insert(material)
+                }
+            }
+        } catch (e: Exception) {
+            when (e) {
+                is UnknownHostException -> {
+                    // Handle no network connection
+                    Log.e("MaterialRepository", "No network connection.")
+                }
+                is TimeoutCancellationException -> {
+                    // Handle request timeout
+                    Log.e("MaterialRepository", "Timeout.")
+                }
+                else -> {
+                    // Handle other exceptions
+                    Log.e("MaterialRepository", "An error occurred: ${e.message}")
+                }
+            }
         }
     }
 

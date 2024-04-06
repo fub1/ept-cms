@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             Text(text ="xx")
-            ExposedDropdownMenuSample()
+            NewTaskScreen()
         }
     }
 }
