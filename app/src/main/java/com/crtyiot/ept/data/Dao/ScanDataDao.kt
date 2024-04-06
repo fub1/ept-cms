@@ -18,8 +18,10 @@ interface ScanDataDao {
     @Query("SELECT * from scanData ORDER BY scanTime ASC")
     fun getAllScanData(): Flow<List<ScanData>>
 
-    @Query("SELECT * from scanData WHERE scanDataId = :scanId")
-    fun getScanData(scanId: Int): Flow<ScanData>
+    // 凭task-uuid
+
+    @Query("SELECT * from scanData WHERE taskId = :scanId")
+    fun getScanData(scanId: String): Flow<ScanData>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.

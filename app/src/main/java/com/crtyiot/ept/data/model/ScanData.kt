@@ -8,12 +8,11 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "scanData")
 data class ScanData(
-    @PrimaryKey(autoGenerate = true)
-    val scanDataId: Int = 0,
-    val taskId: Int,
+    @PrimaryKey
+    val taskId: String,
     val cmsMatCode: String,
     val vdaMatCode: String,
-    val scanTime: LocalDateTime,
+    val scanTime: String,
     val vdaSerialCode: String,
     val isDeleted: Boolean
 )

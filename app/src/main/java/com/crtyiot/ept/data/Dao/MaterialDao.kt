@@ -15,6 +15,9 @@ interface MaterialDao {
     @Query("SELECT * from material")
         fun getAllMaterials(): Flow<List<Material>>
 
+    @Query("SELECT * from material WHERE vdaMatCode = :vdaMatCode")
+    fun getMaterial(vdaMatCode: String): Flow<Material>
+
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(material: Material)

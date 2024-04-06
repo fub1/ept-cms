@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Text
+import com.crtyiot.ept.ui.screen.indexScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -13,7 +14,8 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             Text(text ="xx")
-            NewTaskScreen()
+            //NewTaskScreen()
+            indexScreen()
         }
     }
 }

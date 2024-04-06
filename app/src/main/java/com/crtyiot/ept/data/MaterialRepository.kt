@@ -19,6 +19,8 @@ class MaterialRepository @Inject constructor(
 
     fun getAll(): Flow<List<Material>> = materialDao.getAllMaterials()
 
+    fun getMaterial(vda: String): Flow<Material> = materialDao.getMaterial(vda)
+
 
 
     suspend fun refreshMaterials() {
