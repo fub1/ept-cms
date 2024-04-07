@@ -28,6 +28,8 @@ class newTaskViewModel @Inject constructor(
 
     val _staffid = MutableStateFlow("")
     val staffid: Flow<String> = _staffid
+    val _newTaskId = MutableStateFlow<String>("")
+    val newTaskId: Flow<String> = _newTaskId
 
 
     init {
@@ -42,32 +44,26 @@ class newTaskViewModel @Inject constructor(
 
     fun registerTask(matSelect: String) {
         val selectMatQty = ((materialRepository.getMaterial(matSelect)).map { it.pickQty })
+
         viewModelScope.launch {
             delay(1)
-            var targetCount :Int = selectMatQty.first()
+            var targetCount: Int = selectMatQty.first()
             val task = Task(
                 taskId = UUID.randomUUID().toString(),
                 staff = _staffid.value,
-                vdaMatId = matSelect, // Assuming matSelect can be converted to Int
+                vdaMatId = matSelect,
                 createTaskTime = System.currentTimeMillis().toString(),
                 targetQty = targetCount,
                 isSynced = false
             )
+
             if (task.staff.isNotEmpty() && task.vdaMatId.isNotEmpty()) {
                 taskRepository.insert(task)
+                _newTaskId.value = task.taskId // 更新newTaskId的值
             } else {
                 Log.e("newTaskViewModel", "registerTask: Invalid task data")
             }
-
         }
         Log.i("newTask-VM", ":  $matSelect, ${_staffid.value}, $selectMatQty.first()")
-
     }
-
-
-
-
 }
-
-
-

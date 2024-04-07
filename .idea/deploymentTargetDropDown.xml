@@ -9,13 +9,13 @@
               <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\fub20\.android\avd\New_Device_API_24.avd" />
+                  <type value="SERIAL_NUMBER" />
+                  <value value="T0123B3XMABA2596" />
                 </Key>
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-06T18:39:59.494299600Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-04-07T08:07:54.564787500Z" />
         </State>
       </entry>
     </value>

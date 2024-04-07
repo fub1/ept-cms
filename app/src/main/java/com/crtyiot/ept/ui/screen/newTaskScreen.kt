@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,16 +30,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.crtyiot.ept.ui.Screen
-import com.crtyiot.ept.ui.viewModel.indexViewModel
 import com.crtyiot.ept.ui.viewModel.newTaskViewModel
-import com.crtyiot.ept.ui.viewModel.scanViewModel
 import androidx.activity.compose.BackHandler
+// Add these imports at the top of your file
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +46,13 @@ fun NewTaskScreen(
     viewModel: newTaskViewModel = hiltViewModel(),
     navController: NavController
 ) {
+    val newTaskUuid by viewModel.newTaskId.collectAsState(initial = "")
+    if (newTaskUuid.isNotEmpty()) {
+        navController.navigate(ScanScreen.withTaskId(newTaskUuid))
+    }
+
+
+
     // 返回键返回index
     BackHandler {
         navController.navigate(Screen.IndexScreen.route)

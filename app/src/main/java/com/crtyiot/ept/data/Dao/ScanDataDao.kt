@@ -22,6 +22,9 @@ interface ScanDataDao {
     @Query("SELECT * from scanData WHERE taskId = :taskId")
     fun getScanTask(taskId: String): Flow<List<ScanData>>
 
+    @Query("SELECT * from scanData WHERE taskId = :taskId AND isDeleted = 0")
+    fun getScanTaskNotDeleted(taskId: String): Flow<List<ScanData>>
+
 
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an

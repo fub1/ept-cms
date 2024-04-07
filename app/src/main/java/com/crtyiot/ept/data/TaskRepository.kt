@@ -12,8 +12,15 @@ class TaskRepository @Inject constructor (
     private val taskDao: TaskDao
 ) : TaskRepository {
     override fun getAll(): Flow<List<Task>> = taskDao.getAllTasks()
+    override fun getVdaMatId(vdaMatId: String): Flow<Task> {
+        TODO("Not yet implemented")
+    }
 
     fun taskDashboard(): Flow<List<TaskWithScannedCount>> = taskDao.getTasksWithScannedCount()
+
+
+    fun getVdaMatIdByTaskId(taskId: String): Flow<String> = taskDao.getVdaMatIdByTaskId(taskId)
+    fun getCmsMatCodeByTaskId(taskId: String): Flow<String> = taskDao.getCmsMatCodeByTaskId(taskId)
     override suspend fun insert(task: Task) = taskDao.insert(task)
     override suspend fun delete(task: Task) = taskDao.delete(task)
     override suspend fun update(task: Task) = taskDao.update(task)

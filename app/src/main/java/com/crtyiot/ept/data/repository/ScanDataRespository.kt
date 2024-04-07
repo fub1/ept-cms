@@ -18,6 +18,8 @@ interface ScanDataRespository {
     fun getAll(): Flow<List<ScanData>>
 
     fun getScanTask(taskId: String): Flow<List<ScanData>>
+
+    // fun getScanTaskNotDeleted(taskId: String): Flow<List<ScanData>>
     suspend fun insert(scanData: ScanData)
     suspend fun delete(scanData: ScanData)
     suspend fun update(scanData: ScanData)

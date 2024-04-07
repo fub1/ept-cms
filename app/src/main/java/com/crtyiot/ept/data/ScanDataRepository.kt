@@ -14,6 +14,8 @@ class OfflineScanDataRepository @Inject constructor (
 
     override fun getAll(): Flow<List<ScanData>> = scanDataDao.getAllScanData()
 
+    fun getScanTaskNotDeleted(taskId: String): Flow<List<ScanData>> = scanDataDao.getScanTaskNotDeleted(taskId)
+
     override fun getScanTask(taskId: String): Flow<List<ScanData>> = scanDataDao.getScanTask(taskId)
 
 

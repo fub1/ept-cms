@@ -9,6 +9,7 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import com.crtyiot.ept.data.model.Task
 import com.crtyiot.ept.data.model.TaskWithScannedCount
+import com.crtyiot.ept.data.model.Material
 
 @Dao
 interface TaskDao {
@@ -19,6 +20,15 @@ interface TaskDao {
         @Query("SELECT * from task WHERE taskId = :taskId")
         fun getTask(taskId: Int): Flow<Task>
 
+        // uuid 查询vdamat
+        @Query("SELECT vdaMatId from task WHERE taskId = :taskId")
+        fun getVdaMatIdByTaskId(taskId: String): Flow<String>
+        // uuid 查询cmsmat
+        @Query("""  SELECT material.cmsMatId
+                    FROM task 
+                    INNER JOIN material ON task.vdaMatId = material.vdaMatCode 
+                    WHERE task.taskId = :taskId""")
+        fun getCmsMatCodeByTaskId(taskId: String): Flow<String>
 
         // 可以返回包含任务日期时间，员工号，原材料号，目标数量，和已扫描数量。
         @Query("""

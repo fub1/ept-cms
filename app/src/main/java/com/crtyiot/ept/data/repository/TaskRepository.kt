@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.Flow
 // data write to DB mast use kotlin coroutines(suspend fun)
 interface TaskRepository {
     fun getAll(): Flow<List<Task>>
+
+    fun getVdaMatId(vdaMatId: String): Flow<Task>
+
     suspend fun insert(task: Task)
     suspend fun delete(task: Task)
     suspend fun update(task: Task)

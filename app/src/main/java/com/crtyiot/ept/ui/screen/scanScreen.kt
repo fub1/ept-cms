@@ -19,20 +19,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.crtyiot.ept.ui.Screen
-import com.crtyiot.ept.ui.viewModel.indexViewModel
+
 import com.crtyiot.ept.ui.viewModel.scanViewModel
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.unit.dp
+
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -54,6 +58,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.crtyiot.ept.data.model.ScanData
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -76,8 +91,7 @@ fun ScanScreen(
 
     // 加载已扫数据
     val scanedData = viewModel.scanTaskList.collectAsState(initial = emptyList())
-    val scanTaskInfo = viewModel.scanningTaskId.collectAsState(initial = "")
-    var xxx = scanTaskInfo.value
+
 
     Scaffold(
         topBar = {
@@ -161,7 +175,7 @@ fun ScanedTable(scanedData: List<ScanData>) {
                     Text(
                         text = buildAnnotatedString {
                             withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
-                                append("删除")
+                                append("预留")
                             }
                         },
                         modifier = Modifier
@@ -178,41 +192,162 @@ fun ScanedTable(scanedData: List<ScanData>) {
 }
 
 @Composable
-fun ScanFidle(viewModel: viewModel) {
+fun ScanFidle(
+    viewModel: scanViewModel,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    onStart: () -> Unit = {},
+    onStop: () -> Unit = {}
+) {
+    //错误信息，从ViewModel中获取
+    val errMessage by viewModel.errorMsg.collectAsState(initial = "")
+    //cms\vda\序列号错误信息，从ViewModel中获取
+    val cmsError by viewModel.cmsCodeError.collectAsState(initial = false)
+    val vdaError by viewModel.vdaCodeError.collectAsState(initial = false)
+    val serialError by viewModel.serialCodeError.collectAsState(initial = false)
+    // 输入框数据
+    val cmsMatCode by viewModel.cmsMat.collectAsState(initial = "")
+    val vdaMatCode by viewModel.vdaMat.collectAsState(initial = "")
+    val vdaSerialCode by viewModel.vdaSerialCode.collectAsState(initial = "")
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(1.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextField(
-            value = "d",
-            onValueChange = {},
-            label = { Text("扫码内部CMS物料号") },
-            isError = true,
-            modifier = Modifier.height(46.dp),
-            singleLine = true,
-            readOnly = true,
-        )
-        TextField(
-            value = "d",
-            onValueChange = {},
-            label = { Text("扫码客户VDA物料号") },
-            isError = true,
-            modifier = Modifier.height(46.dp),
-            singleLine = true,
-            readOnly = true
+
+        if (cmsError) {
+            TextField(
+                value = cmsMatCode,
+                enabled = false,
+                onValueChange = {},
+                label = { Text("扫码内部CMS物料号") },
+                isError = true,
+                modifier = Modifier.height(46.dp),
+                singleLine = true,
+                readOnly = true,
             )
-        TextField(
-            value = "d",
-            onValueChange = {},
-            label = { Text("扫码客户VDA序列号") },
-            isError = true,
-            singleLine = true,
-            readOnly = true,
-            modifier = Modifier.height(68.dp),
-            supportingText = { Text("支持扫码或手动输入", modifier = Modifier.scale(0.87f)) },
-        )
+        } else {
+            TextField(
+                value = cmsMatCode,
+                enabled = false,
+                onValueChange = {},
+                label = { Text("扫码内部CMS物料号") },
+                modifier = Modifier.height(46.dp),
+                singleLine = true,
+                readOnly = true,
+            )
+        }
+
+        if (vdaError) {
+            TextField(
+                value = vdaMatCode,
+                enabled = false,
+                onValueChange = {},
+                label = { Text("扫码客户VDA物料号") },
+                isError = true,
+                modifier = Modifier.height(46.dp),
+                singleLine = true,
+                readOnly = true
+            )
+        } else {
+            TextField(
+                value = vdaMatCode,
+                enabled = false,
+                onValueChange = {},
+                label = { Text("扫码客户VDA物料号") },
+                modifier = Modifier.height(46.dp),
+                singleLine = true,
+                readOnly = true,
+            )
+        }
+
+        if (serialError) {
+            TextField(
+                value = vdaSerialCode,
+                enabled = false,
+                onValueChange = {},
+                label = { Text("扫码客户VDA序列号") },
+                isError = true,
+                singleLine = true,
+                readOnly = true,
+                modifier = Modifier.height(46.dp),
+            )
+        } else {
+            TextField(
+                value = vdaSerialCode,
+                enabled = false,
+                onValueChange = {},
+                label = { Text("扫码客户VDA序列号") },
+                singleLine = true,
+                readOnly = true,
+                modifier = Modifier.height(46.dp),
+
+            )
+
+
+        // 下面扫码sideEffect
+
+            val currentOnStart by rememberUpdatedState(onStart)
+            val currentOnStop by rememberUpdatedState(onStop)
+            // 广播使用的上下文
+            val context = LocalContext.current
+
+
+
+            // If `lifecycleOwner` changes, dispose and reset the effect
+            DisposableEffect(lifecycleOwner) {
+                // 广播
+                val receiver = object : BroadcastReceiver() {
+                    override fun onReceive(context: Context, intent: Intent) {
+                        Log.i("Bc", "onReceive")
+                        val scanData = intent.getStringExtra("eee")
+                        scanData?.let { viewModel.getBCScanData(it) }
+                    }
+                }
+                // Create an observer that triggers our remembered callbacks
+                // for sending analytics events
+                val observer = LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_START) {
+                        Log.i("MainScreen", "ON_START")
+                        currentOnStart()
+                        context.registerReceiver(receiver, IntentFilter("com.v.b"))
+                    } else if (event == Lifecycle.Event.ON_STOP) {
+                        Log.i("MainScreen", "ON_STOP")
+                        try {
+                            context.unregisterReceiver(receiver)
+                        } catch (e: IllegalArgumentException) {
+                            Log.e("MainScreen-when stop", "unregisterReceiver error")
+                        }
+                        currentOnStop()
+                    }
+                }
+
+                // Add the observer to the lifecycle
+                lifecycleOwner.lifecycle.addObserver(observer)
+
+                // When the effect leaves the Composition, remove the observer
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                    try {
+                        context.unregisterReceiver(receiver)
+                    } catch (e: IllegalArgumentException) {
+                        Log.e("MainScreen-when Dispose", "unregisterReceiver error")
+                    }
+                    Log.i("MainScreen", "onDispose")
+                }
+            }
+
+        }
+
+
+
+
+        if (errMessage != ""){
+            Text(text = errMessage, color = Color.Red, modifier = Modifier.scale(0.77f))
+        }
+
 
         BottonRow(viewModel)
 
@@ -221,20 +356,17 @@ fun ScanFidle(viewModel: viewModel) {
 }
 
 @Composable
-fun BottonRow(viewModel: ScanViewModel) {
-    if (scanstepindex == 0 ) {
-        CmsMatField(viewModel = viewModel)
-    } else if (scanstepindex == 1) {
-        VdaMatField(viewModel = viewModel)
-    } else if (scanstepindex == 2) {
-        VdaPkgField(viewModel = viewModel)
-    }
+fun BottonRow(viewModel: scanViewModel) {
+
+    val scanstepindex by viewModel.scanstepindex.collectAsState(initial = 0)
+
+
 
     // 按钮组，根据业务场景，常用的按钮会优先放置在右侧
     Row(
         Modifier
             .fillMaxWidth()
-            .align(Alignment.CenterHorizontally)
+            //.align(Alignment.CenterHorizontally)
         ,
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
