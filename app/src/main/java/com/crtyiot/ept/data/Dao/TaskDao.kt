@@ -23,6 +23,12 @@ interface TaskDao {
         // uuid 查询vdamat
         @Query("SELECT vdaMatId from task WHERE taskId = :taskId")
         fun getVdaMatIdByTaskId(taskId: String): Flow<String>
+
+        // uuid 查询taskqty
+        @Query("SELECT targetQty from task WHERE taskId = :taskId")
+        fun getTagQTYByTaskId(taskId: String): Flow<Int>
+
+
         // uuid 查询cmsmat
         @Query("""  SELECT material.cmsMatId
                     FROM task 

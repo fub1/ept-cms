@@ -20,6 +20,9 @@ class TaskRepository @Inject constructor (
 
 
     fun getVdaMatIdByTaskId(taskId: String): Flow<String> = taskDao.getVdaMatIdByTaskId(taskId)
+
+    fun getTagQTYByTaskId(taskId: String): Flow<Int> = taskDao.getTagQTYByTaskId(taskId)
+
     fun getCmsMatCodeByTaskId(taskId: String): Flow<String> = taskDao.getCmsMatCodeByTaskId(taskId)
     override suspend fun insert(task: Task) = taskDao.insert(task)
     override suspend fun delete(task: Task) = taskDao.delete(task)

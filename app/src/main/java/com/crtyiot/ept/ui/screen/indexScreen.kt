@@ -46,6 +46,9 @@ import com.crtyiot.ept.ui.viewModel.indexViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 import androidx.activity.compose.BackHandler
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.platform.LocalContext
 import kotlin.system.exitProcess
 
 object ScanScreen {
@@ -67,6 +70,7 @@ fun indexScreen(
         exitProcess(0)
     }
     val taskDH by viewModel.taskDash.collectAsState(initial = emptyList())
+    val context = LocalContext.current
     var rowCounter = 0
 
     Surface(modifier = Modifier.fillMaxWidth()) {
@@ -79,7 +83,15 @@ fun indexScreen(
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
-                        Text(text = "法雷奥防错扫描-已注册任务")
+                        Text(text = "法雷奥防错-已注册任务")
+                    },
+                    actions = {
+                        IconButton(onClick = { viewModel.exportScanData(context)}) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Localized description"
+                            )
+                        }
                     },
                 )
             },

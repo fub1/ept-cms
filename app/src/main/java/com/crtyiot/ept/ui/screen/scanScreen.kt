@@ -80,6 +80,8 @@ fun ScanScreen(
     viewModel: scanViewModel = hiltViewModel()
 
 ) {
+    val scanTaskCount by viewModel.scanTaskListCount.collectAsState(initial = 0)
+    val sacnTagCount by viewModel.taskTagQTY.collectAsState(initial = 0)
     // 回跳首页
     BackHandler {
         navController.navigate(Screen.IndexScreen.route)
@@ -109,15 +111,17 @@ fun ScanScreen(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
-                title = { Text(text = "防错扫码") }
+                title = { Text(text = "防错扫码,已扫 $scanTaskCount / $sacnTagCount") }
             )
         }
     ) {
         // ，TopAppBar 高度56dp，所以这里加一个56dp的Spacer
         Column {
             Spacer(Modifier.height(31.dp))
+            if (scanTaskCount < sacnTagCount) {
+                ScanFidle(viewModel)
+            }
 
-            ScanFidle(viewModel)
 
             ScanedTable(scanedData = scanedData.value)
         }

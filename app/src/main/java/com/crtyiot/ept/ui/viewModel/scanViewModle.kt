@@ -40,6 +40,8 @@ class scanViewModel @Inject constructor(
     private val scanDataRepository: OfflineScanDataRepository,
     private val taskRepository: TaskRepository,
 ) : ViewModel() {
+
+
     private val _scanningTaskId = MutableStateFlow("")
     private val _cmsMat = MutableStateFlow("")
     val cmsMat: StateFlow<String> = _cmsMat.asStateFlow()
@@ -50,6 +52,38 @@ class scanViewModel @Inject constructor(
     val taskCmsMat: StateFlow<String> = _taskCmsMat.asStateFlow()
     private val _taskVdaMat = MutableStateFlow("")
     val taskVdaMat: StateFlow<String> = _taskVdaMat.asStateFlow()
+    private val _taskTagQTY = MutableStateFlow(0)
+    val taskTagQTY: StateFlow<Int> = _taskTagQTY.asStateFlow()
+    // 整个扫码任务过程只扫一次cms码
+    private val _iscmsCodeScaned = MutableStateFlow(false)
+
+    val scanTaskList: Flow<List<ScanData>> = _scanningTaskId.flatMapLatest { taskId ->
+        scanDataRepository.getScanTaskNotDeleted(taskId)
+    }
+
+    val scanTaskListCount: Flow<Int> = scanTaskList.map { it.size }
+
+
+    // 扫描步骤索引
+    private val _scanstepindex = MutableStateFlow(0)
+    val scanstepindex : Flow<Int> = _scanstepindex
+    // 错误提示
+    private val _errorMsg = MutableStateFlow("")
+    val errorMsg : Flow<String> = _errorMsg
+    // 错误1-cms物料号错误
+    private val _cmsCodeError = MutableStateFlow(false)
+    val cmsCodeError : Flow<Boolean> = _cmsCodeError
+    // 错误2-vda物料号错误
+    private val _vdaCodeError = MutableStateFlow(false)
+    val vdaCodeError : Flow<Boolean> = _vdaCodeError
+    // 错误3-序列号错误
+    private val _serialCodeError = MutableStateFlow(false)
+    val serialCodeError : Flow<Boolean> = _serialCodeError
+    // 序列号
+    private val _vdaSerialCode = MutableStateFlow("")
+    val vdaSerialCode : Flow<String> = _vdaSerialCode
+
+
 
     init {
         //
@@ -58,6 +92,7 @@ class scanViewModel @Inject constructor(
             resetScanData()
             loadMatCodes()
             loadVdaCodes()
+            loadQTY()
 
         }
     }
@@ -87,6 +122,18 @@ class scanViewModel @Inject constructor(
         }
     }
 
+    fun loadQTY() {
+        viewModelScope.launch {
+            _scanningTaskId.value.let { taskId ->
+                taskRepository.getTagQTYByTaskId(taskId).collect { qty ->
+                    _taskTagQTY.value = qty
+                    Log.i("scan 225", "loadMatCodes: $qty")
+                    Log.i("scan 226", "loadMatCodes: ${_taskTagQTY.value}")
+                }
+            }
+        }
+    }
+
     fun getBCScanData(data: String) {
         when (_scanstepindex.value) {
             0 -> {
@@ -100,6 +147,7 @@ class scanViewModel @Inject constructor(
                 } else {
                     _cmsMat.value = data.trim()
                     _scanstepindex.value = 1
+                    _iscmsCodeScaned.value = true
                 }
             }
             1 -> {
@@ -126,46 +174,6 @@ class scanViewModel @Inject constructor(
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    val scanTaskList: Flow<List<ScanData>> = _scanningTaskId.flatMapLatest { taskId ->
-        scanDataRepository.getScanTaskNotDeleted(taskId)
-    }
-
-    val scanTaskListCount: Flow<Int> = scanTaskList.map { it.size }
-
-
-    // 扫描步骤索引
-    private val _scanstepindex = MutableStateFlow(0)
-    val scanstepindex : Flow<Int> = _scanstepindex
-    // 错误提示
-    private val _errorMsg = MutableStateFlow("")
-    val errorMsg : Flow<String> = _errorMsg
-    // 错误1-cms物料号错误
-    private val _cmsCodeError = MutableStateFlow(false)
-    val cmsCodeError : Flow<Boolean> = _cmsCodeError
-    // 错误2-vda物料号错误
-    private val _vdaCodeError = MutableStateFlow(false)
-    val vdaCodeError : Flow<Boolean> = _vdaCodeError
-    // 错误3-序列号错误
-    private val _serialCodeError = MutableStateFlow(false)
-    val serialCodeError : Flow<Boolean> = _serialCodeError
-    // 序列号
-    private val _vdaSerialCode = MutableStateFlow("")
-    val vdaSerialCode : Flow<String> = _vdaSerialCode
-
-
     fun setTaskId(taskId: String) {
         _scanningTaskId.value = taskId
     }
@@ -192,10 +200,15 @@ class scanViewModel @Inject constructor(
         _cmsCodeError.value = false
         _vdaCodeError.value = false
         _serialCodeError.value = false
-        _cmsMat.value = ""
         _vdaMat.value = ""
         _vdaSerialCode.value = ""
-        _scanstepindex.value = 0
+        if (_iscmsCodeScaned.value) {
+            _scanstepindex.value = 1
+        } else {
+            _scanstepindex.value = 0
+            _cmsMat.value = ""
+        }
+
     }
 
     fun backScanData() {
