@@ -19,6 +19,8 @@ interface ScanDataRespository {
 
     fun getScanTask(taskId: String): Flow<List<ScanData>>
 
+    fun getScanDataByVdaSerialCode(vdaSerialCode: String): Flow<String>
+
     // fun getScanTaskNotDeleted(taskId: String): Flow<List<ScanData>>
     suspend fun insert(scanData: ScanData)
     suspend fun delete(scanData: ScanData)

@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.crtyiot.ept.MainApplication
@@ -56,6 +57,7 @@ class scanViewModel @Inject constructor(
     val taskTagQTY: StateFlow<Int> = _taskTagQTY.asStateFlow()
     // 整个扫码任务过程只扫一次cms码
     private val _iscmsCodeScaned = MutableStateFlow(false)
+
 
     val scanTaskList: Flow<List<ScanData>> = _scanningTaskId.flatMapLatest { taskId ->
         scanDataRepository.getScanTaskNotDeleted(taskId)
@@ -134,6 +136,8 @@ class scanViewModel @Inject constructor(
         }
     }
 
+
+
     fun getBCScanData(data: String) {
         when (_scanstepindex.value) {
             0 -> {
@@ -179,6 +183,8 @@ class scanViewModel @Inject constructor(
     }
 
     fun submitScanData() {
+        val _existData = MutableStateFlow("")
+
         val scanDataSubmit = ScanData(
             taskId = _scanningTaskId.value,
             cmsMatCode = _cmsMat.value,
@@ -188,8 +194,19 @@ class scanViewModel @Inject constructor(
             isDeleted = false
         )
         viewModelScope.launch {
-            scanDataRepository.insert(scanDataSubmit)
-            resetScanData()
+            // Query the database for the same serial number
+            scanDataRepository.getScanDataByVdaSerialCode(_vdaSerialCode.value).first().let { code ->
+                if (code != null) {
+                    _errorMsg.value = "序列号重复"
+                    Log.i("XXXXscan", "submitScanData: $code")
+                } else {
+                    resetScanData()
+                    scanDataRepository.insert(scanDataSubmit)
+                    Log.i("1Xscan", "submitScanData: $scanDataSubmit")
+
+                }
+
+            }
         }
     }
 

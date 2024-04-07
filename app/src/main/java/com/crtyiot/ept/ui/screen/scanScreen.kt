@@ -65,6 +65,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.widget.Toast
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
@@ -212,6 +213,7 @@ fun ScanFidle(
     val cmsMatCode by viewModel.cmsMat.collectAsState(initial = "")
     val vdaMatCode by viewModel.vdaMat.collectAsState(initial = "")
     val vdaSerialCode by viewModel.vdaSerialCode.collectAsState(initial = "")
+    val context = LocalContext.current
 
 
     Column(
@@ -289,14 +291,26 @@ fun ScanFidle(
                 modifier = Modifier.height(46.dp),
 
             )
+            // 错误Toast
+
+            LaunchedEffect(errMessage) {
+                errMessage.let {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    // 重置错误消息，防止重复显示Toast
+                    //yourViewModel.resetErrorMessage()
+                }
+            }
 
 
-        // 下面扫码sideEffect
+
+           // 下面扫码sideEffect
 
             val currentOnStart by rememberUpdatedState(onStart)
             val currentOnStop by rememberUpdatedState(onStop)
             // 广播使用的上下文
             val context = LocalContext.current
+
+
 
 
 

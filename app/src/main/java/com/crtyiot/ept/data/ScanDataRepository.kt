@@ -21,7 +21,8 @@ class OfflineScanDataRepository @Inject constructor (
 
     override fun getScanTask(taskId: String): Flow<List<ScanData>> = scanDataDao.getScanTask(taskId)
 
-
+    override fun getScanDataByVdaSerialCode(vdaSerialCode: String):
+            Flow<String> = scanDataDao.getScanDataByVdaSerialCode(vdaSerialCode)
     override suspend fun insert(scanData: ScanData) = scanDataDao.insert(scanData)
 
     override suspend fun delete(scanData: ScanData) = scanDataDao.delete(scanData)

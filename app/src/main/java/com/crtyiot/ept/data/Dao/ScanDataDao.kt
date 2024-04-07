@@ -25,6 +25,10 @@ interface ScanDataDao {
     @Query("SELECT * from scanData WHERE taskId = :taskId AND isDeleted = 0")
     fun getScanTaskNotDeleted(taskId: String): Flow<List<ScanData>>
 
+    // 放置提交重复数据
+    @Query("SELECT vdaSerialCode from scanData WHERE vdaSerialCode = :vdaSerialCode")
+    fun getScanDataByVdaSerialCode(vdaSerialCode: String): Flow<String>
+
 
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
