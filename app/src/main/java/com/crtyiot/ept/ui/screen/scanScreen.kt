@@ -143,9 +143,9 @@ fun ScanedTable(scanedData: List<ScanData>) {
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(text = "内部料号", modifier = Modifier.weight(1f))
-            Text(text = "客户料号", modifier = Modifier.weight(1f))
-            Text(text = "包装序号", modifier = Modifier.weight(1f))
-            Text(text = "任务操作", modifier = Modifier.weight(1f))
+            Text(text = "客户料号", modifier = Modifier.weight(0.8f))
+            Text(text = "包装序号", modifier = Modifier.weight(0.6f))
+            Text(text = "任务操作", modifier = Modifier.weight(0.7f))
         }
 
         LazyColumn(
@@ -167,13 +167,13 @@ fun ScanedTable(scanedData: List<ScanData>) {
                     )
                     Text(
                         text = item.vdaMatCode,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(0.95f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = item.vdaSerialCode,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(0.6f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -184,7 +184,7 @@ fun ScanedTable(scanedData: List<ScanData>) {
                             }
                         },
                         modifier = Modifier
-                            .weight(.5f)
+                            .weight(.7f)
                             .clickable { /*TODO*/ },
                         overflow = TextOverflow.Ellipsis
                     )

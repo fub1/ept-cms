@@ -58,7 +58,7 @@ fun NewTaskScreen(
         navController.navigate(Screen.IndexScreen.route)
     }
     // 绑定员工号数据
-    val empNo by viewModel.staffid.collectAsState(initial = "")
+    val empNo by viewModel.staffid.collectAsState(initial = "0")
     // 下拉框物料数据
     val matlist by viewModel.mat.collectAsState(initial = emptyList())
     matlist.map { it.vdaMatCode }

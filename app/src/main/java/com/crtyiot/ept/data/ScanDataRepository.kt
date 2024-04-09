@@ -1,5 +1,6 @@
 package com.crtyiot.ept.data
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.crtyiot.ept.data.Dao.ScanDataDao
 import com.crtyiot.ept.data.model.ScanData
@@ -7,8 +8,11 @@ import com.crtyiot.ept.data.repository.ScanDataRespository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.io.File
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.util.Date
+import java.util.Locale
 
 @Singleton
 class OfflineScanDataRepository @Inject constructor (
@@ -33,7 +37,9 @@ class OfflineScanDataRepository @Inject constructor (
         val allScanData = getAll().first() // 使用 first() 等待 Flow 收集完成并获取结果
         val csvHeader = "taskId,cmsMatCode,vdaMatCode,scanTime,vdaSerialCode,isDeleted\n"
         val csvContent = allScanData.joinToString("\n") { scanData ->
-            "${scanData.taskId},${scanData.cmsMatCode},${scanData.vdaMatCode},${scanData.scanTime},${scanData.vdaSerialCode},${scanData.isDeleted}"
+        //    "${scanData.taskId},${scanData.cmsMatCode},${scanData.vdaMatCode},${scanData.scanTime},${scanData.vdaSerialCode},${scanData.isDeleted}"
+        // 修改时间
+              "${scanData.taskId},${scanData.cmsMatCode},${scanData.vdaMatCode},${timeTrans(scanData.scanTime)},${scanData.vdaSerialCode},${scanData.isDeleted}"
         }
         val csvString = csvHeader + csvContent
 
@@ -57,4 +63,12 @@ class OfflineScanDataRepository @Inject constructor (
                 instance ?: OfflineScanDataRepository(scanDataDao).also { instance = it }
             }
     }
+}
+
+
+fun timeTrans(stamp: String): String? {
+    val timeL = stamp.toLong()
+    val sd = SimpleDateFormat("yyyy-MM-dd-hh-mm", Locale.getDefault())
+    val data = Date(timeL)
+    return sd.format(timeL)
 }

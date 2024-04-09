@@ -26,7 +26,7 @@ class newTaskViewModel @Inject constructor(
 
     val mat: Flow<List<Material>> = materialRepository.getAll()
 
-    val _staffid = MutableStateFlow("")
+    val _staffid = MutableStateFlow("0")
     val staffid: Flow<String> = _staffid
     val _newTaskId = MutableStateFlow<String>("")
     val newTaskId: Flow<String> = _newTaskId

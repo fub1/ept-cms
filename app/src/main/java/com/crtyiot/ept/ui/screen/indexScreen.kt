@@ -126,10 +126,10 @@ fun indexScreen(
                 // Header
                 Spacer(Modifier.height(20.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "扫描员工", modifier = Modifier.weight(1f))
                     Text(text = "原材料号", modifier = Modifier.weight(1f))
-                    Text(text = "目标数量", modifier = Modifier.weight(1f))
-                    Text(text = "已扫数量", modifier = Modifier.weight(1f))
+                    Text(text = "扫描员工", modifier = Modifier.weight(0.85f))
+                    Text(text = "目标数量", modifier = Modifier.weight(0.9f))
+                    Text(text = "已扫数量", modifier = Modifier.weight(0.9f))
                     Text(text = "任务操作", modifier = Modifier.weight(1f))
                 }
 
@@ -145,10 +145,10 @@ fun indexScreen(
                         Row(modifier = Modifier
                             .background(backgroundColor)
                             .fillMaxWidth()) {
-                            Text(text = task.staff, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                             Text(text = task.vdaMatId, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            Text(text = task.targetQty.toString(), modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            Text(text = task.scannedCount.toString(), modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(text = task.staff, modifier = Modifier.weight(0.85f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(text = task.targetQty.toString(), modifier = Modifier.weight(0.9f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(text = task.scannedCount.toString(), modifier = Modifier.weight(0.9f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                             Text(
                                 text = buildAnnotatedString {
                                     withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
